@@ -36,7 +36,21 @@ def postjob(request):
 # def admin_index(request):
 #     return render(request, 'admin/index.html')
 def admin_index2(request):
-    return render(request, 'admin/index-2.html')
+    stu=Students.objects.filter(is_active = True)
+    stu_count=stu.count()
+    comp=CompanyProfile.objects.filter(is_active = True)
+    comp_count=comp.count()
+    job=Jobs.objects.filter(is_active = True)
+    job_count=job.count()
+    context={
+        'stu':stu,
+        'stu_count':stu_count,
+        'comp':comp,
+        'comp_count':comp_count,
+        'job':job,
+        'job_count':job_count,
+        }
+    return render(request, 'admin/index-2.html',context)
 def admin_profile(request):
     return render(request, 'admin/profile.html')
 def admin_editprofile(request):
@@ -566,13 +580,13 @@ from .models import Students  # Import your model
 
 def generate_pdf(request):
     # Fetch department data from your model
-    stus = Students.objects.values ('email','course','department','semester','sname')
+    stu = Students.objects.values ('email','course','department','semester','sname')
 
     # Load the HTML template
     template = get_template('admin/admin_poststudent.html')
 
     # Render the template with department data
-    html_content = template.render({'stus': stus})
+    html_content = template.render({'stu': stu})
 
     # Create a PDF file-like object
     response = HttpResponse(content_type='application/pdf')
